@@ -31,7 +31,7 @@ branches:
 
 before_build:
   - git clone https://github.com/pothosware/SoapySDR.git
-  - cmd: cd Idefix  
+  - cmd: cd SoapySDR  
 
 # configure and build
 build_script:
