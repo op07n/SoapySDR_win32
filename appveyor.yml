@@ -43,8 +43,17 @@ build_script:
   
 after_build:
   - dir
-  - 7z a SoapySDR_win32.7z  "C:\projects\soapysdr-win32\SoapySDR\build"
+  - 7z a SoapySDR_win32.7z  "C:\projects\soapysdr-win32\SoapySDR\build\lib\Release"
 
 artifacts:  # Archive the generated packages in the ci.appveyor.com build report.  - path: bin\Release\*
   - path: SoapySDR\build\SoapySDR_win32.7z
     name: artifacts-all  
+    
+deploy:
+  release: v$(appveyor_build_version)
+  description: SoapySDR_win32_release
+  tag: v$(appveyor_build_version)
+  provider: GitHub
+  auth_token:
+     secure: yrM69KAMKsN0o1btzkUu5VaJuPoP5UeLEjXAL5Mk1/30WiPKeryMi0GE/PcIy6DO
+  artifact: 'SoapySDR\build\SoapySDR_win32.7z'        
