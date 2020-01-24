@@ -1,0 +1,49 @@
+########################################################################
+## AppVeyor config for SoapySDR
+##
+########################################################################
+
+version: '{build}'
+
+platform: x86
+
+configuration:
+  - Release
+
+environment:
+  global:
+    INSTALL_PREFIX: C:/Program Files/SoapySDR
+
+# Operating system (build VM template)
+os: Windows Server 2012 R2
+
+# branches to build
+branches:
+  # whitelist
+  only:
+    - master
+    - maint
+
+# dependencies for python bindings
+# disabled because of link issues on VM
+#install:
+#  - choco install swig
+
+before_build:
+  - git clone https://github.com/pothosware/SoapySDR.git
+  - cmd: cd Idefix  
+
+# configure and build
+build_script:
+  - mkdir build
+  - cd build
+  - cmake ../ -G "Visual Studio 12 Win64" -DCMAKE_INSTALL_PREFIX="%INSTALL_PREFIX%" -DCMAKE_BUILD_TYPE=%CONFIGURATION%
+  - cmake --build . --config %CONFIGURATION%
+  - cmake --build . --config %CONFIGURATION% --target install
+  
+after_build:
+  - 7z a SoapySDR_win32.7z "%APPVEYOR_BUILD_FOLDER%\SoapySDR\SoapySDR\bin\Release"
+
+artifacts:  # Archive the generated packages in the ci.appveyor.com build report.  - path: bin\Release\*
+  - path: SoapySDR\SoapySDR.7z
+    name: artifacts-all  
